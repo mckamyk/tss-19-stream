@@ -3,7 +3,8 @@ import tsConfigPaths from 'vite-tsconfig-paths'
 
 export default defineConfig({
   server: {
-    preset: 'aws-lambda',
+    //preset: 'aws-lambda',
+    preset: 'bun',
     awsLambda: {
       streaming: true,
     },

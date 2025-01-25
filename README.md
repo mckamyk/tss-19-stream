@@ -1,72 +1,15 @@
-# Welcome to TanStack.com!
+## Prefetching in React-19 TSS
 
-This site is built with TanStack Router!
+It appears that calling
 
-- [TanStack Router Docs](https://tanstack.com/router)
-
-It's deployed automagically with Netlify!
-
-- [Netlify](https://netlify.com/)
-
-## Development
-
-From your terminal:
-
-```sh
-pnpm install
-pnpm dev
+```ts
+context.queryClient.prefetchQuery({...})
 ```
 
-This starts your app in development mode, rebuilding assets on file changes.
+inside `loader()` or `beforeLoader()` initiates the request but doesn't inform the client of the pending request.
 
-## Editing and previewing the docs of TanStack projects locally
+Thus, the client initiates its own request and the server-initiated request is still performed, but discarded.
 
-The documentations for all TanStack projects except for `React Charts` are hosted on [https://tanstack.com](https://tanstack.com), powered by this TanStack Router app.
-In production, the markdown doc pages are fetched from the GitHub repos of the projects, but in development they are read from the local file system.
+Streaming is working for `useSuspenseQuery({...})` however, regardless of whether or not `prefetchQuery({...})` was issued in a server-side loader. I know that this is intended behavior, and its great! But I'd still like to be able to preload queries and stream responses down.
 
-Follow these steps if you want to edit the doc pages of a project (in these steps we'll assume it's [`TanStack/form`](https://github.com/tanstack/form)) and preview them locally :
-
-1. Create a new directory called `tanstack`.
-
-```sh
-mkdir tanstack
-```
-
-2. Enter the directory and clone this repo and the repo of the project there.
-
-```sh
-cd tanstack
-git clone git@github.com:TanStack/tanstack.com.git
-git clone git@github.com:TanStack/form.git
-```
-
-> [!NOTE]
-> Your `tanstack` directory should look like this:
->
-> ```
-> tanstack/
->    |
->    +-- form/
->    |
->    +-- tanstack.com/
-> ```
-
-> [!WARNING]
-> Make sure the name of the directory in your local file system matches the name of the project's repo. For example, `tanstack/form` must be cloned into `form` (this is the default) instead of `some-other-name`, because that way, the doc pages won't be found.
-
-3. Enter the `tanstack/tanstack.com` directory, install the dependencies and run the app in dev mode:
-
-```sh
-cd tanstack.com
-pnpm i
-# The app will run on https://localhost:3000 by default
-pnpm dev
-```
-
-4. Now you can visit http://localhost:3000/form/latest/docs/overview in the browser and see the changes you make in `tanstack/form/docs`.
-
-> [!NOTE]
-> The updated pages need to be manually reloaded in the browser.
-
-> [!WARNING]
-> You will need to update the `docs/config.json` file (in the project's repo) if you add a new doc page!
+I'm working on a site that is hosted in Singapore, but many users are still in the West. Being able to seed the query client's cache ~400ms earlier due to latency would be amazing.
