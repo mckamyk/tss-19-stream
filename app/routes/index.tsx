@@ -9,6 +9,7 @@ function Home() {
     <div className="p-2">
       <div className="text-center text-xl">
         This is a testing app for streaming prefetched requests from the server
+        via query's prefectQuery
       </div>
       <div className="text-center text-xl">
         Be sure to reload the page on each route so that the server attempts to
